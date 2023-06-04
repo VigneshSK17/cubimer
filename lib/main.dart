@@ -1,5 +1,6 @@
 import 'package:cubimer/widgets/bottom_bar.dart';
 import 'package:cubimer/widgets/center_timer.dart';
+import 'package:cubimer/widgets/scrambles_drawer.dart';
 import 'package:flutter/material.dart';
 
 // TODO: Add riverpod and localstorage
@@ -75,8 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
-        leading: const Icon(Icons.list),
+        // leading: const Icon(Icons.list),
       ),
+      drawer: ScramblesDrawer(),
       body: const Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
