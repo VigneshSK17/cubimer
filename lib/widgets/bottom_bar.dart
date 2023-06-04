@@ -25,27 +25,28 @@ class _BottomBarState extends State<BottomBar> {
                       ),
                     ),
                     Spacer(),
-                    Expanded(
+                    SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
                         child: Wrap(
-                      alignment: WrapAlignment.spaceAround,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        // TODO: Fix dropdown
-                        DropdownButton(
-                          items: [DropdownMenuItem(child: Text("3x3"))],
-                          onChanged: (value) =>
-                              print("hi"), // TODO: Change it to state
-                        ),
-                        Icon(Icons.delete),
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () => showDialog(
-                              context: context,
-                              builder: (context) => EditDialog()),
-                        ), // TODO: Add popup
-                        Icon(Icons.redo)
-                      ],
-                    ))
+                          alignment: WrapAlignment.spaceAround,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            // TODO: Fix dropdown
+                            DropdownButton(
+                              items: [DropdownMenuItem(child: Text("3x3"))],
+                              onChanged: (value) =>
+                                  print("hi"), // TODO: Change it to state
+                            ),
+                            Icon(Icons.delete),
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (context) => EditDialog()),
+                            ), // TODO: Add popup
+                            Icon(Icons.redo)
+                          ],
+                        ))
                   ],
                 ))));
   }

@@ -1,4 +1,5 @@
 import 'package:cubimer/widgets/bottom_bar.dart';
+import 'package:cubimer/widgets/center_timer.dart';
 import 'package:flutter/material.dart';
 
 // TODO: Add riverpod and localstorage
@@ -75,7 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
         leading: const Icon(Icons.list),
-        actions: const [Icon(Icons.settings)],
       ),
       body: const Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -95,11 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '0.00',
-            ),
-          ],
+          children: <Widget>[Expanded(child: CenterTimer())],
         ),
       ),
       bottomNavigationBar: const BottomBar(),
