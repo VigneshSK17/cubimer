@@ -1,13 +1,19 @@
+import 'package:cubimer/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EditDialog extends StatefulWidget {
-  const EditDialog({super.key});
+import '../data/scramble.dart';
+
+class EditDialog extends ConsumerStatefulWidget {
+  const EditDialog({super.key, required this.scramble});
+
+  final Scramble scramble;
 
   @override
-  State<StatefulWidget> createState() => _EditDialogState();
+  ConsumerState<EditDialog> createState() => _EditDialogState();
 }
 
-class _EditDialogState extends State<EditDialog> {
+class _EditDialogState extends ConsumerState<EditDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
@@ -21,13 +27,13 @@ class _EditDialogState extends State<EditDialog> {
             TextFormField(
               decoration: InputDecoration(),
               textAlign: TextAlign.center,
-              initialValue: "F D L R U B U' R' L' D' F'",
+              initialValue: widget.scramble.scramble,
             ),
             TextFormField(
               decoration: InputDecoration(),
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
-              initialValue: "5.55",
+              initialValue: widget.scramble.time.toStringAsFixed(2),
               validator: (value) => "Hi", // TODO: Check for double
             ),
           ])),
@@ -36,7 +42,10 @@ class _EditDialogState extends State<EditDialog> {
             IconButton(
               // TODO: Make specific delete buttton code
               icon: Icon(Icons.delete),
-              onPressed: () => print("Delete"), // TODO: Add delete func
+              onPressed: () {
+                ref.read(scrambleListProvider.notifier).remove(widget.scramble);
+                Navigator.of(context).pop();
+              }, // TODO: Add delete func
             ),
             IconButton(
               icon: Icon(Icons.save),
@@ -49,7 +58,7 @@ class _EditDialogState extends State<EditDialog> {
           ]),
           Center(
               child: Text(
-            "Last Edited: 1-2-23",
+            "Last Edited: ${widget.scramble.updatedAtStr()}",
             style: TextStyle(fontWeight: FontWeight.w300),
           ))
         ]);

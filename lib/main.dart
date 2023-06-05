@@ -1,19 +1,30 @@
+import 'package:cubimer/data/scramble.dart';
 import 'package:cubimer/widgets/bottom_bar.dart';
 import 'package:cubimer/widgets/center_timer.dart';
 import 'package:cubimer/widgets/scrambles_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // TODO: Add riverpod and localstorage
+
+final scrambleListProvider =
+    StateNotifierProvider<ScrambleList, List<Scramble>>((ref) {
+  return ScrambleList([
+    Scramble(1, 5.55, "F D L R U B U' R' L' D' F'"),
+    Scramble(2, 10.10, "F D L R U B U' R' L' D'")
+  ]);
+});
+
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Cubimer',
       theme: ThemeData(
@@ -40,7 +51,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -55,10 +66,10 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends ConsumerState<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done

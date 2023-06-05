@@ -1,16 +1,21 @@
+import 'package:cubimer/main.dart';
 import 'package:cubimer/widgets/edit_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ScramblesDrawer extends StatefulWidget {
+class ScramblesDrawer extends ConsumerStatefulWidget {
   const ScramblesDrawer({super.key});
 
   @override
-  State<StatefulWidget> createState() => _ScramblesDrawerState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ScramblesDrawerState();
 }
 
-class _ScramblesDrawerState extends State<ScramblesDrawer> {
+class _ScramblesDrawerState extends ConsumerState<ScramblesDrawer> {
   @override
   Widget build(BuildContext context) {
+    final scrambles = ref.watch(scrambleListProvider);
+
     return Drawer(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -26,14 +31,16 @@ class _ScramblesDrawerState extends State<ScramblesDrawer> {
                 DataColumn(label: Text('Time')),
                 DataColumn(label: Text('Ao5'))
               ], rows: [
-                DataRow(
-                    cells: [
-                      DataCell(Text('1')),
-                      DataCell(Text('5.55')),
-                      DataCell(Text(' ')),
-                    ],
-                    onLongPress: () => showDialog(
-                        context: context, builder: (context) => EditDialog()))
+                for (final s in scrambles)
+                  DataRow(
+                      cells: [
+                        DataCell(Text(s.id.toString())),
+                        DataCell(Text(s.time.toStringAsFixed(2))),
+                        DataCell(Text(' '))
+                      ],
+                      onLongPress: () => showDialog(
+                          context: context,
+                          builder: (context) => EditDialog(scramble: s)))
               ])
             ])));
   }

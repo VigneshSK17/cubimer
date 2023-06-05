@@ -1,3 +1,4 @@
+import 'package:cubimer/data/scramble.dart';
 import 'package:cubimer/widgets/edit_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +43,9 @@ class _BottomBarState extends State<BottomBar> {
                               icon: Icon(Icons.edit),
                               onPressed: () => showDialog(
                                   context: context,
-                                  builder: (context) => EditDialog()),
+                                  builder: (context) => EditDialog(
+                                        scramble: Scramble(1, 5.55, "A B C D"),
+                                      )),
                             ), // TODO: Add popup
                             Icon(Icons.redo)
                           ],
