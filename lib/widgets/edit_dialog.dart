@@ -46,7 +46,12 @@ class _EditDialogState extends State<EditDialog> {
                 Navigator.of(context).pop();
               },
             )
-          ])
+          ]),
+          Center(
+              child: Text(
+            "Last Edited: 1-2-23",
+            style: TextStyle(fontWeight: FontWeight.w300),
+          ))
         ]);
   }
 }
