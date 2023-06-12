@@ -30,12 +30,11 @@ class _EditDialogState extends ConsumerState<EditDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-        title: Text("Edit Scramble"),
-        contentPadding: EdgeInsets.all(16.0),
+        title: const Text("Edit Scramble"),
+        contentPadding: const EdgeInsets.all(16.0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         children: [
           Form(
-              // TODO: Add formkey for button
               child: Column(children: [
             TextFormField(
               controller: scrambleController,
@@ -47,26 +46,25 @@ class _EditDialogState extends ConsumerState<EditDialog> {
             TextFormField(
               controller: timeController,
               textAlign: TextAlign.center,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))
               ],
             ),
           ])),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             IconButton(
-              // TODO: Make specific delete buttton code
-              icon: Icon(Icons.delete),
+              icon: const Icon(Icons.delete),
               onPressed: () {
                 ref.read(scrambleListProvider.notifier).remove(widget.scramble);
                 Navigator.of(context).pop();
-              }, // TODO: Add delete func
+              },
             ),
             IconButton(
-              icon: Icon(Icons.save),
+              icon: const Icon(Icons.save),
               onPressed: () {
-                // TODO: Add save func using formkey
                 var newScramble = scrambleController.text;
                 var newTime =
                     double.parse(timeController.text).toStringAsFixed(2);
@@ -85,7 +83,7 @@ class _EditDialogState extends ConsumerState<EditDialog> {
           Center(
               child: Text(
             "Last Edited: ${widget.scramble.updatedAtStr()}",
-            style: TextStyle(fontWeight: FontWeight.w300),
+            style: const TextStyle(fontWeight: FontWeight.w300),
           ))
         ]);
   }
