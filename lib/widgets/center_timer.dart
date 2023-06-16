@@ -1,6 +1,8 @@
 import 'package:cubimer/data/scramble.dart';
 import 'package:cubimer/main.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
@@ -33,45 +35,18 @@ class _CenterTimerState extends ConsumerState<CenterTimer> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTapDown: onTapDownController,
-        onTapUp: onTapUpController,
-        child: FittedBox(
-            fit: BoxFit.fitWidth,
-            child: Padding(
-                padding: EdgeInsets.all(32),
-                child: StreamBuilder<int>(
-                  stream: _timer.rawTime,
-                  initialData: 0,
-                  builder: (context, snap) {
-                    final rawTime = snap.data!;
+  bool _onKey(KeyEvent event) {
+    final key = event.logicalKey.keyLabel;
 
-                    var displayTime = StopWatchTimer.getDisplayTime(rawTime);
-                    if (rawTime < StopWatchTimer.getMilliSecFromSecond(10)) {
-                      displayTime = StopWatchTimer.getDisplayTime(rawTime,
-                              hours: false, minute: false)
-                          .substring(1);
-                    } else if (rawTime <
-                        StopWatchTimer.getMilliSecFromMinute(1)) {
-                      displayTime = StopWatchTimer.getDisplayTime(rawTime,
-                          hours: false, minute: false);
-                    } else if (rawTime <
-                        StopWatchTimer.getMilliSecFromMinute(10)) {
-                      displayTime =
-                          StopWatchTimer.getDisplayTime(rawTime, hours: false)
-                              .substring(1);
-                    } else if (rawTime <
-                        StopWatchTimer.getMilliSecFromHour(1)) {
-                      displayTime =
-                          StopWatchTimer.getDisplayTime(rawTime, hours: false);
-                    }
+    if (key == " ") {
+      if (event is KeyDownEvent) {
+        onTapDownController(TapDownDetails());
+      } else if (event is KeyUpEvent) {
+        onTapUpController(TapUpDetails(kind: PointerDeviceKind.unknown));
+      }
+    }
 
-                    return Text(displayTime, style: _textStyle);
-                  },
-                ))));
+    return false;
   }
 
   void onTapDownController(TapDownDetails _) {
@@ -120,5 +95,58 @@ class _CenterTimerState extends ConsumerState<CenterTimer> {
       ref.read(currentScrambleProvider.notifier).state =
           CurrentScramble.genScramble();
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: onTapDownController,
+        onTapUp: onTapUpController,
+        child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Padding(
+                padding: EdgeInsets.all(32),
+                child: StreamBuilder<int>(
+                  stream: _timer.rawTime,
+                  initialData: 0,
+                  builder: (context, snap) {
+                    final rawTime = snap.data!;
+
+                    var displayTime = StopWatchTimer.getDisplayTime(rawTime);
+                    if (rawTime < StopWatchTimer.getMilliSecFromSecond(10)) {
+                      displayTime = StopWatchTimer.getDisplayTime(rawTime,
+                              hours: false, minute: false)
+                          .substring(1);
+                    } else if (rawTime <
+                        StopWatchTimer.getMilliSecFromMinute(1)) {
+                      displayTime = StopWatchTimer.getDisplayTime(rawTime,
+                          hours: false, minute: false);
+                    } else if (rawTime <
+                        StopWatchTimer.getMilliSecFromMinute(10)) {
+                      displayTime =
+                          StopWatchTimer.getDisplayTime(rawTime, hours: false)
+                              .substring(1);
+                    } else if (rawTime <
+                        StopWatchTimer.getMilliSecFromHour(1)) {
+                      displayTime =
+                          StopWatchTimer.getDisplayTime(rawTime, hours: false);
+                    }
+
+                    return Text(displayTime, style: _textStyle);
+                  },
+                ))));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ServicesBinding.instance.keyboard.addHandler(_onKey);
+  }
+
+  @override
+  void dispose() {
+    ServicesBinding.instance.keyboard.removeHandler(_onKey);
+    super.dispose();
   }
 }
