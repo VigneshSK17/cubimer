@@ -1,15 +1,17 @@
 import 'package:cubimer/data/scramble.dart';
+import 'package:cubimer/main.dart';
 import 'package:cubimer/widgets/edit_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BottomBar extends StatefulWidget {
+class BottomBar extends ConsumerStatefulWidget {
   const BottomBar({super.key});
 
   @override
-  State<StatefulWidget> createState() => _BottomBarState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _BottomBarState();
 }
 
-class _BottomBarState extends State<BottomBar> {
+class _BottomBarState extends ConsumerState<BottomBar> {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
@@ -22,7 +24,7 @@ class _BottomBarState extends State<BottomBar> {
                       // TODO: Fix font sizing
                       child: FittedBox(
                         fit: BoxFit.fitWidth,
-                        child: Text("F D L R U B U' R' L' D' F'"),
+                        child: Text(ref.watch(currentScrambleProvider)),
                       ),
                     ),
                     Spacer(),
@@ -38,16 +40,40 @@ class _BottomBarState extends State<BottomBar> {
                               onChanged: (value) =>
                                   print("hi"), // TODO: Change it to state
                             ),
-                            Icon(Icons.delete),
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                if (ref.watch(scrambleListProvider).length !=
+                                    0) {
+                                  ref
+                                      .watch(scrambleListProvider.notifier)
+                                      .remove(
+                                          ref.watch(scrambleListProvider).last);
+                                }
+                              },
+                            ),
                             IconButton(
                               icon: Icon(Icons.edit),
-                              onPressed: () => showDialog(
-                                  context: context,
-                                  builder: (context) => EditDialog(
-                                        scramble: Scramble(1, 5.55, "A B C D"),
-                                      )),
+                              onPressed: () => ref
+                                          .watch(scrambleListProvider)
+                                          .length !=
+                                      0
+                                  ? showDialog(
+                                      context: context,
+                                      // TODO: Set up so that it uses most recent scramble
+                                      builder: (context) => EditDialog(
+                                            scramble: ref
+                                                .watch(scrambleListProvider)
+                                                .last,
+                                          ))
+                                  : null,
                             ), // TODO: Add popup
-                            Icon(Icons.redo)
+                            IconButton(
+                              icon: Icon(Icons.redo),
+                              onPressed: () => ref
+                                  .read(currentScrambleProvider.notifier)
+                                  .state = CurrentScramble.genScramble(),
+                            ),
                           ],
                         ))
                   ],

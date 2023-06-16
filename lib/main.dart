@@ -5,15 +5,17 @@ import 'package:cubimer/widgets/scrambles_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// TODO: Add riverpod and localstorage
-
+// TODO: Put scrambles in localstate
 final scrambleListProvider =
     StateNotifierProvider<ScrambleList, List<Scramble>>((ref) {
   return ScrambleList([
-    Scramble(1, 5.55, "F D L R U B U' R' L' D' F'"),
-    Scramble(2, 10.10, "F D L R U B U' R' L' D'")
+    // Scramble(555, "F D L R U B U' R' L' D' F'"),
+    // Scramble(1010, "F D L R U B U' R' L' D'")
   ]);
 });
+
+final currentScrambleProvider =
+    StateNotifierProvider<CurrentScramble, String>((ref) => CurrentScramble());
 
 void main() {
   runApp(ProviderScope(child: MyApp()));

@@ -24,7 +24,7 @@ class _EditDialogState extends ConsumerState<EditDialog> {
 
     scrambleController = TextEditingController(text: widget.scramble.scramble);
     timeController =
-        TextEditingController(text: widget.scramble.time.toStringAsFixed(2));
+        TextEditingController(text: widget.scramble.getTimeString());
   }
 
   @override
@@ -66,15 +66,14 @@ class _EditDialogState extends ConsumerState<EditDialog> {
               icon: const Icon(Icons.save),
               onPressed: () {
                 var newScramble = scrambleController.text;
-                var newTime =
-                    double.parse(timeController.text).toStringAsFixed(2);
+                var newTime = Scramble.convertTimeString(timeController.text);
 
                 if (widget.scramble.scramble != newScramble ||
-                    widget.scramble.time.toStringAsFixed(2) != newTime) {
+                    widget.scramble.time != newTime) {
                   ref.read(scrambleListProvider.notifier).edit(
-                      id: widget.scramble.id,
-                      time: double.parse(newTime),
-                      scramble: newScramble);
+                      time: newTime,
+                      scramble: newScramble,
+                      createdAt: widget.scramble.createdAt);
                 }
                 Navigator.of(context).pop();
               },

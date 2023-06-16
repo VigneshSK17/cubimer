@@ -1,20 +1,22 @@
+import 'package:cubimer/data/scramble.dart';
+import 'package:cubimer/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 enum TimerState { NEW, WAIT, RUNNING, STOP, END }
 
-class CenterTimer extends StatefulWidget {
+class CenterTimer extends ConsumerStatefulWidget {
   const CenterTimer({super.key});
 
   @override
-  State<StatefulWidget> createState() => _CenterTimerState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _CenterTimerState();
 }
 
 // TODO: Add controller to change colors
-class _CenterTimerState extends State<CenterTimer> {
+class _CenterTimerState extends ConsumerState<CenterTimer> {
   var _textStyle =
       TextStyle(color: Color(0xff1D1B1E), fontFamily: "RobotoMono");
-  final timerFont = "RobotoMono";
 
   var _timerState = TimerState.NEW;
   var _timer = StopWatchTimer();
@@ -22,9 +24,11 @@ class _CenterTimerState extends State<CenterTimer> {
   void _toggleTextStyle() {
     setState(() {
       if (_timerState == TimerState.WAIT) {
-        _textStyle = TextStyle(color: Colors.green, fontFamily: timerFont);
+        _textStyle =
+            TextStyle(color: Colors.green, fontFamily: _textStyle.fontFamily);
       } else if (_timerState == TimerState.STOP) {
-        _textStyle = TextStyle(color: Color(0xff1D1B1E), fontFamily: timerFont);
+        _textStyle = TextStyle(
+            color: Color(0xff1D1B1E), fontFamily: _textStyle.fontFamily);
       }
     });
   }
@@ -73,7 +77,6 @@ class _CenterTimerState extends State<CenterTimer> {
   void onTapDownController(TapDownDetails _) {
     print("Holding");
 
-    // TODO: fix timerstate here
     setState(() {
       if (_timerState == TimerState.NEW) {
         _timerState = TimerState.WAIT;
@@ -87,7 +90,15 @@ class _CenterTimerState extends State<CenterTimer> {
       _timer.onResetTimer();
     } else if (_timerState == TimerState.STOP) {
       _timer.onStopTimer();
+
+      final currScramble = ref.watch(currentScrambleProvider);
+
+      ref
+          .read(scrambleListProvider)
+          .add(Scramble(_timer.rawTime.value, currScramble));
     }
+
+    // TODO: Store scramble time
   }
 
   void onTapUpController(TapUpDetails _) {
@@ -104,6 +115,10 @@ class _CenterTimerState extends State<CenterTimer> {
 
     if (_timerState == TimerState.RUNNING) {
       _timer.onStartTimer();
+    } else if (_timerState == TimerState.NEW) {
+      // TODO: Add way to randomize scramble
+      ref.read(currentScrambleProvider.notifier).state =
+          CurrentScramble.genScramble();
     }
   }
 }

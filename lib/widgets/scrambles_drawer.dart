@@ -23,25 +23,31 @@ class _ScramblesDrawerState extends ConsumerState<ScramblesDrawer> {
                 bottomRight: Radius.circular(8.0))),
         child: Padding(
             padding: EdgeInsets.all(8),
-            child: Column(children: [
-              // Text("Scrambles"),
-              // Divider(),
-              DataTable(columns: [
-                DataColumn(label: Text('ID')),
-                DataColumn(label: Text('Time')),
-                DataColumn(label: Text('Ao5'))
-              ], rows: [
-                for (final s in scrambles)
-                  DataRow(
-                      cells: [
-                        DataCell(Text(s.id.toString())),
-                        DataCell(Text(s.time.toStringAsFixed(2))),
-                        DataCell(Text(' '))
-                      ],
-                      onLongPress: () => showDialog(
-                          context: context,
-                          builder: (context) => EditDialog(scramble: s)))
-              ])
-            ])));
+            child: Scrollbar(
+                child:
+                    // Text("Scrambles"),
+                    // Divider(),
+                    SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: DataTable(columns: [
+                          DataColumn(label: Text('ID')),
+                          DataColumn(label: Text('Time')),
+                          DataColumn(label: Text('Ao5'))
+                        ], rows: [
+                          // for (final s in scrambles)
+                          for (int i = 0; i < scrambles.length; i++)
+                            DataRow(
+                                cells: [
+                                  DataCell(Text((i + 1).toString())),
+                                  DataCell(Text(
+                                      (scrambles[i].time.toDouble() / 1000.0)
+                                          .toStringAsFixed(2))),
+                                  DataCell(Text(' '))
+                                ],
+                                onLongPress: () => showDialog(
+                                    context: context,
+                                    builder: (context) =>
+                                        EditDialog(scramble: scrambles[i])))
+                        ])))));
   }
 }
