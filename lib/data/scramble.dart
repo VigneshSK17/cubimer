@@ -1,6 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:cubimer/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Scramble {
   int time;
@@ -9,6 +13,19 @@ class Scramble {
   DateTime updatedAt = DateTime.now();
 
   Scramble(this.time, this.scramble);
+
+  Scramble.fromJson(Map<String, dynamic> json)
+      : time = int.parse(json["time"]),
+        scramble = json["scramble"],
+        createdAt = DateTime.parse(json["created_at"]),
+        updatedAt = DateTime.parse(json["updated_at"]);
+
+  Map<String, dynamic> toJson() => {
+        'time': time.toString(),
+        'scramble': scramble,
+        'created_at': createdAt.toString(),
+        'updated_at': updatedAt.toString(),
+      };
 
   String updatedAtStr() {
     var t = updatedAt.toLocal();
@@ -37,22 +54,28 @@ class ScrambleList extends StateNotifier<List<Scramble>> {
   ScrambleList([List<Scramble>? initialScrambles])
       : super(initialScrambles ?? []);
 
-  void add({required int time, required String scramble}) {
+  Future<void> add({required int time, required String scramble}) async {
     state = [...state, Scramble(time, scramble)];
+
+    ScrambleStore.saveScrambles(state);
   }
 
-  void edit(
+  Future<void> edit(
       {required int time,
       required String scramble,
-      required DateTime createdAt}) {
+      required DateTime createdAt}) async {
     state = [
       for (final s in state)
         if (s.createdAt == createdAt) Scramble(time, scramble) else s,
     ];
+
+    ScrambleStore.saveScrambles(state);
   }
 
-  void remove(Scramble scramble) {
+  Future<void> remove(Scramble scramble) async {
     state = state.where((s) => s != scramble).toList();
+
+    await ScrambleStore.saveScrambles(state);
   }
 }
 
@@ -151,5 +174,40 @@ class CurrentScramble extends StateNotifier<String> {
     }
 
     return scramble.join(" ");
+  }
+}
+
+class ScrambleStore {
+  ScrambleStore();
+
+  // static Future<List<Scramble>> getScrambles() async {
+  //   final prefs = await SharedPreferences.getInstance();
+
+  //   final stringScrambles = prefs.getStringList("scrambles") ?? [];
+  //   return stringScrambles
+  //       .map((s) => Scramble.fromJson(jsonDecode(s)))
+  //       .toList();
+  // }
+
+  static Future<List<Scramble>> getScrambles() async {
+    await storage.ready;
+    List<dynamic> scrambles = storage.getItem('scrambles') ?? [];
+    return scrambles.map((s) => Scramble.fromJson(jsonDecode(s))).toList();
+  }
+
+  // static Future<List<Scramble>> saveScrambles(List<Scramble> scrambles) async {
+  //   final prefs = await SharedPreferences.getInstance();
+
+  //   final stringScrambles =
+  //       scrambles.map((s) => jsonEncode(s.toJson())).toList();
+  //   await prefs.setStringList("scrambles", stringScrambles);
+
+  //   return await getScrambles();
+  // }
+
+  static Future<void> saveScrambles(List<Scramble> scrambles) async {
+    final stringScrambles =
+        scrambles.map((s) => jsonEncode(s.toJson())).toList();
+    storage.setItem('scrambles', stringScrambles);
   }
 }

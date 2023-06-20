@@ -30,52 +30,63 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                     Spacer(),
                     SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: Wrap(
-                          alignment: WrapAlignment.spaceAround,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            // TODO: Fix dropdown
-                            DropdownButton(
-                              items: [DropdownMenuItem(child: Text("3x3"))],
-                              onChanged: (value) =>
-                                  print("hi"), // TODO: Change it to state
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () {
-                                if (ref.watch(scrambleListProvider).length !=
-                                    0) {
-                                  ref
-                                      .watch(scrambleListProvider.notifier)
-                                      .remove(
-                                          ref.watch(scrambleListProvider).last);
-                                }
-                              },
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.edit),
-                              onPressed: () => ref
-                                          .watch(scrambleListProvider)
-                                          .length !=
-                                      0
-                                  ? showDialog(
-                                      context: context,
-                                      // TODO: Set up so that it uses most recent scramble
-                                      builder: (context) => EditDialog(
-                                            scramble: ref
+                        child: FutureBuilder(
+                            future: storage.ready,
+                            builder: (_, __) => Wrap(
+                                  alignment: WrapAlignment.spaceAround,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    // TODO: Fix dropdown
+                                    DropdownButton(
+                                      items: [
+                                        DropdownMenuItem(child: Text("3x3"))
+                                      ],
+                                      onChanged: (value) => print(
+                                          "hi"), // TODO: Change it to state
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.delete),
+                                      onPressed: () {
+                                        if (ref
                                                 .watch(scrambleListProvider)
-                                                .last,
-                                          ))
-                                  : null,
-                            ), // TODO: Add popup
-                            IconButton(
-                              icon: Icon(Icons.redo),
-                              onPressed: () => ref
-                                  .read(currentScrambleProvider.notifier)
-                                  .state = CurrentScramble.genScramble(),
-                            ),
-                          ],
-                        ))
+                                                .length !=
+                                            0) {
+                                          ref
+                                              .watch(
+                                                  scrambleListProvider.notifier)
+                                              .remove(ref
+                                                  .watch(scrambleListProvider)
+                                                  .last);
+                                        }
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () => ref
+                                                  .watch(scrambleListProvider)
+                                                  .length !=
+                                              0
+                                          ? showDialog(
+                                              context: context,
+                                              // TODO: Set up so that it uses most recent scramble
+                                              builder: (context) => EditDialog(
+                                                    scramble: ref
+                                                        .watch(
+                                                            scrambleListProvider)
+                                                        .last,
+                                                  ))
+                                          : null,
+                                    ), // TODO: Add popup
+                                    IconButton(
+                                      icon: Icon(Icons.redo),
+                                      onPressed: () => ref
+                                              .read(currentScrambleProvider
+                                                  .notifier)
+                                              .state =
+                                          CurrentScramble.genScramble(),
+                                    ),
+                                  ],
+                                )))
                   ],
                 ))));
   }

@@ -54,31 +54,37 @@ class _EditDialogState extends ConsumerState<EditDialog> {
             ),
           ])),
           const SizedBox(height: 10),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                ref.read(scrambleListProvider.notifier).remove(widget.scramble);
-                Navigator.of(context).pop();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.save),
-              onPressed: () {
-                var newScramble = scrambleController.text;
-                var newTime = Scramble.convertTimeString(timeController.text);
+          FutureBuilder(
+              future: storage.ready,
+              builder: (_, __) =>
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        ref
+                            .read(scrambleListProvider.notifier)
+                            .remove(widget.scramble);
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.save),
+                      onPressed: () {
+                        var newScramble = scrambleController.text;
+                        var newTime =
+                            Scramble.convertTimeString(timeController.text);
 
-                if (widget.scramble.scramble != newScramble ||
-                    widget.scramble.time != newTime) {
-                  ref.read(scrambleListProvider.notifier).edit(
-                      time: newTime,
-                      scramble: newScramble,
-                      createdAt: widget.scramble.createdAt);
-                }
-                Navigator.of(context).pop();
-              },
-            )
-          ]),
+                        if (widget.scramble.scramble != newScramble ||
+                            widget.scramble.time != newTime) {
+                          ref.read(scrambleListProvider.notifier).edit(
+                              time: newTime,
+                              scramble: newScramble,
+                              createdAt: widget.scramble.createdAt);
+                        }
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ])),
           Center(
               child: Text(
             "Last Edited: ${widget.scramble.updatedAtStr()}",
