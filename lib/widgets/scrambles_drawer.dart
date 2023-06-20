@@ -3,6 +3,8 @@ import 'package:cubimer/widgets/edit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/scramble.dart';
+
 class ScramblesDrawer extends ConsumerStatefulWidget {
   const ScramblesDrawer({super.key});
 
@@ -35,14 +37,21 @@ class _ScramblesDrawerState extends ConsumerState<ScramblesDrawer> {
                           DataColumn(label: Text('Ao5'))
                         ], rows: [
                           // for (final s in scrambles)
-                          for (int i = 0; i < scrambles.length; i++)
+                          for (int i = scrambles.length - 1; i >= 0; i--)
                             DataRow(
                                 cells: [
                                   DataCell(Text((i + 1).toString())),
-                                  DataCell(Text(
-                                      (scrambles[i].time.toDouble() / 1000.0)
-                                          .toStringAsFixed(2))),
-                                  DataCell(Text(' '))
+                                  DataCell(Text(Scramble.timeToString(
+                                      scrambles[i].time))),
+                                  DataCell(Text(i >= 4
+                                      ? Scramble.timeToString((scrambles
+                                                  .sublist(i - 4, i + 1)
+                                                  .map((s) => s.time)
+                                                  .reduce((value, element) =>
+                                                      value + element) /
+                                              5)
+                                          .round())
+                                      : ""))
                                 ],
                                 onLongPress: () => showDialog(
                                     context: context,

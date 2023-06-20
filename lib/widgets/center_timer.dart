@@ -116,30 +116,8 @@ class _CenterTimerState extends ConsumerState<CenterTimer> {
                       initialData: 0,
                       builder: (context, snap) {
                         final rawTime = snap.data!;
-
-                        var displayTime =
-                            StopWatchTimer.getDisplayTime(rawTime);
-                        if (rawTime <
-                            StopWatchTimer.getMilliSecFromSecond(10)) {
-                          displayTime = StopWatchTimer.getDisplayTime(rawTime,
-                                  hours: false, minute: false)
-                              .substring(1);
-                        } else if (rawTime <
-                            StopWatchTimer.getMilliSecFromMinute(1)) {
-                          displayTime = StopWatchTimer.getDisplayTime(rawTime,
-                              hours: false, minute: false);
-                        } else if (rawTime <
-                            StopWatchTimer.getMilliSecFromMinute(10)) {
-                          displayTime = StopWatchTimer.getDisplayTime(rawTime,
-                                  hours: false)
-                              .substring(1);
-                        } else if (rawTime <
-                            StopWatchTimer.getMilliSecFromHour(1)) {
-                          displayTime = StopWatchTimer.getDisplayTime(rawTime,
-                              hours: false);
-                        }
-
-                        return Text(displayTime, style: _textStyle);
+                        return Text(Scramble.timeToString(rawTime),
+                            style: _textStyle);
                       },
                     )))));
   }

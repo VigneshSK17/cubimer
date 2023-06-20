@@ -5,6 +5,7 @@ import 'package:cubimer/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class Scramble {
   int time;
@@ -37,12 +38,42 @@ class Scramble {
   }
 
   String getTimeString() {
-    return getTimeSeconds().toStringAsFixed(2);
+    return timeToString(time);
   }
 
-  static int convertTimeString(String timeStr) {
-    return (double.parse(double.parse(timeStr).toStringAsFixed(2)) * 1000)
-        .toInt();
+  static String timeToString(int rawTime) {
+    var displayTime = StopWatchTimer.getDisplayTime(rawTime);
+    if (rawTime < StopWatchTimer.getMilliSecFromSecond(10)) {
+      displayTime =
+          StopWatchTimer.getDisplayTime(rawTime, hours: false, minute: false)
+              .substring(1);
+    } else if (rawTime < StopWatchTimer.getMilliSecFromMinute(1)) {
+      displayTime =
+          StopWatchTimer.getDisplayTime(rawTime, hours: false, minute: false);
+    } else if (rawTime < StopWatchTimer.getMilliSecFromMinute(10)) {
+      displayTime =
+          StopWatchTimer.getDisplayTime(rawTime, hours: false).substring(1);
+    } else if (rawTime < StopWatchTimer.getMilliSecFromHour(1)) {
+      displayTime = StopWatchTimer.getDisplayTime(rawTime, hours: false);
+    }
+
+    return displayTime;
+  }
+
+  static int stringToTime(String timeStr) {
+    // return (double.parse(double.parse(timeStr).toStringAsFixed(2)) * 1000)
+    //     .toInt();
+
+    if (timeStr.contains(':')) {
+      final times = timeStr.split(':');
+
+      return (double.parse(double.parse(times[1]).toStringAsFixed(2)) * 1000)
+              .toInt() +
+          (StopWatchTimer.getMilliSecFromMinute(int.parse(times[0])));
+    } else {
+      return (double.parse(double.parse(timeStr).toStringAsFixed(2)) * 1000)
+          .toInt();
+    }
   }
 
   void setTime(double seconds) {

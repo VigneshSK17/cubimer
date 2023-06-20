@@ -49,7 +49,7 @@ class _EditDialogState extends ConsumerState<EditDialog> {
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9:.]+$'))
               ],
             ),
           ])),
@@ -72,7 +72,7 @@ class _EditDialogState extends ConsumerState<EditDialog> {
                       onPressed: () {
                         var newScramble = scrambleController.text;
                         var newTime =
-                            Scramble.convertTimeString(timeController.text);
+                            Scramble.stringToTime(timeController.text);
 
                         if (widget.scramble.scramble != newScramble ||
                             widget.scramble.time != newTime) {

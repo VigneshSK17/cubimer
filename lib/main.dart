@@ -92,7 +92,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                 backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                 // Here we take the value from the MyHomePage object that was created by
                 // the App.build method, and use it to set our appbar title.
-                title: Text(widget.title),
+                title: Text(widget.title,
+                    style: TextStyle(fontFamily: "PressStart2P")),
                 // leading: const Icon(Icons.list),
               ),
               drawer: ScramblesDrawer(),
@@ -127,12 +128,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
     super.initState();
     () async {
       ScrambleStore.getScrambles().then((res) {
-        print(res);
         ref.read(scrambleListProvider.notifier).state = res;
       });
-
-      // ScrambleStore.saveScrambles([Scramble(555, 'A B C D')])
-      //     .then((value) => null);
     }();
   }
 }
