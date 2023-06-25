@@ -1,11 +1,9 @@
 import 'package:cubimer/data/scramble.dart';
 import 'package:cubimer/main.dart';
-import 'package:cubimer/widgets/scrambles_drawer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:localstorage/localstorage.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 enum TimerState { NEW, WAIT, RUNNING, STOP, END }
@@ -17,13 +15,12 @@ class CenterTimer extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _CenterTimerState();
 }
 
-// TODO: Add controller to change colors
 class _CenterTimerState extends ConsumerState<CenterTimer> {
   var _textStyle =
-      TextStyle(color: Color(0xff1D1B1E), fontFamily: "RobotoMono");
+      const TextStyle(color: Color(0xff1D1B1E), fontFamily: "RobotoMono");
 
   var _timerState = TimerState.NEW;
-  var _timer = StopWatchTimer();
+  final _timer = StopWatchTimer();
 
   void _toggleTextStyle() {
     setState(() {
@@ -32,7 +29,7 @@ class _CenterTimerState extends ConsumerState<CenterTimer> {
             TextStyle(color: Colors.green, fontFamily: _textStyle.fontFamily);
       } else if (_timerState == TimerState.STOP) {
         _textStyle = TextStyle(
-            color: Color(0xff1D1B1E), fontFamily: _textStyle.fontFamily);
+            color: const Color(0xff1D1B1E), fontFamily: _textStyle.fontFamily);
       }
     });
   }
@@ -52,8 +49,6 @@ class _CenterTimerState extends ConsumerState<CenterTimer> {
   }
 
   void onTapDownController(TapDownDetails _) async {
-    print("Holding");
-
     setState(() {
       if (_timerState == TimerState.NEW) {
         _timerState = TimerState.WAIT;
@@ -74,13 +69,9 @@ class _CenterTimerState extends ConsumerState<CenterTimer> {
           .read(scrambleListProvider.notifier)
           .add(time: _timer.rawTime.value, scramble: currScramble);
     }
-
-    // TODO: Store scramble time
   }
 
   void onTapUpController(TapUpDetails _) async {
-    print("Stopped holding");
-
     setState(() {
       if (_timerState == TimerState.WAIT) {
         _timerState = TimerState.RUNNING;
@@ -93,7 +84,6 @@ class _CenterTimerState extends ConsumerState<CenterTimer> {
     if (_timerState == TimerState.RUNNING) {
       _timer.onStartTimer();
     } else if (_timerState == TimerState.NEW) {
-      // TODO: Add way to randomize scramble
       ref.read(currentScrambleProvider.notifier).state =
           CurrentScramble.genScramble();
     }
@@ -110,7 +100,7 @@ class _CenterTimerState extends ConsumerState<CenterTimer> {
             child: FittedBox(
                 fit: BoxFit.fitWidth,
                 child: Padding(
-                    padding: EdgeInsets.all(32),
+                    padding: const EdgeInsets.all(32),
                     child: StreamBuilder<int>(
                       stream: _timer.rawTime,
                       initialData: 0,

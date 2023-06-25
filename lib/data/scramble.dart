@@ -3,8 +3,6 @@ import 'dart:math';
 
 import 'package:cubimer/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:localstorage/localstorage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
 class Scramble {
@@ -61,9 +59,6 @@ class Scramble {
   }
 
   static int stringToTime(String timeStr) {
-    // return (double.parse(double.parse(timeStr).toStringAsFixed(2)) * 1000)
-    //     .toInt();
-
     if (timeStr.contains(':')) {
       final times = timeStr.split(':');
 
@@ -211,30 +206,11 @@ class CurrentScramble extends StateNotifier<String> {
 class ScrambleStore {
   ScrambleStore();
 
-  // static Future<List<Scramble>> getScrambles() async {
-  //   final prefs = await SharedPreferences.getInstance();
-
-  //   final stringScrambles = prefs.getStringList("scrambles") ?? [];
-  //   return stringScrambles
-  //       .map((s) => Scramble.fromJson(jsonDecode(s)))
-  //       .toList();
-  // }
-
   static Future<List<Scramble>> getScrambles() async {
     await storage.ready;
     List<dynamic> scrambles = storage.getItem('scrambles') ?? [];
     return scrambles.map((s) => Scramble.fromJson(jsonDecode(s))).toList();
   }
-
-  // static Future<List<Scramble>> saveScrambles(List<Scramble> scrambles) async {
-  //   final prefs = await SharedPreferences.getInstance();
-
-  //   final stringScrambles =
-  //       scrambles.map((s) => jsonEncode(s.toJson())).toList();
-  //   await prefs.setStringList("scrambles", stringScrambles);
-
-  //   return await getScrambles();
-  // }
 
   static Future<void> saveScrambles(List<Scramble> scrambles) async {
     final stringScrambles =

@@ -1,0 +1,43 @@
+name: Deploy
+on: [push]
+jobs:
+    dist_macos:
+        runs-on: macos-latest
+        steps:
+        - uses: actions/checkout@v3
+        - uses: subosito/flutter-action@v2
+          with:
+            flutter-version: '3.7.7'
+            channel: 'stable'
+        - name: Get dependencies
+          run: flutter pub get
+        - name: Build
+          run: flutter build macos
+        - name: Upload
+          uses: actions/upload-release-asset@v2.0
+          with:
+            repo-token: ${{ secrets.GITHUB_TOKEN }}
+            upload_url: ${{ github.event.release.upload_url }}
+            asset_path: ./build/macos/Build/Products/Release/cubimer.app
+            asset_name: cubimer-${{ github.event.release.tag_name }}-macos
+            asset_content_type: binary/octet-stream
+    dist_windows:
+        runs-on: windows-latest
+        steps:
+        - uses: actions/checkout@v3
+        - uses: subosito/flutter-action@v2
+          with:
+            flutter-version: '3.7.7'
+            channel: 'stable'
+        - name: Get dependencies
+          run: flutter pub get
+        - name: Build
+          run: flutter build windows
+        - name: Upload
+          uses: actions/upload-release-asset@v2.0
+          with:
+            repo-token: ${{ secrets.GITHUB_TOKEN }}
+            upload_url: ${{ github.event.release.upload_url }}
+            asset_path: ./build/windows/runner/Release/cubimer.exe
+            asset_name: cubimer-${{ github.event.release.tag_name }}-macos
+            asset_content_type: binary/octet-stream

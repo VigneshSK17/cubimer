@@ -17,17 +17,16 @@ class _BottomBarState extends ConsumerState<BottomBar> {
     return BottomAppBar(
         child: Center(
             child: Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
                     Expanded(
-                      // TODO: Fix font sizing
                       child: FittedBox(
                         fit: BoxFit.fitWidth,
                         child: Text(ref.watch(currentScrambleProvider)),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: FutureBuilder(
@@ -36,21 +35,18 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                                   alignment: WrapAlignment.spaceAround,
                                   crossAxisAlignment: WrapCrossAlignment.center,
                                   children: [
-                                    // TODO: Fix dropdown
                                     DropdownButton(
-                                      items: [
+                                      items: const [
                                         DropdownMenuItem(child: Text("3x3"))
                                       ],
-                                      onChanged: (value) => print(
-                                          "hi"), // TODO: Change it to state
+                                      onChanged: (value) => (),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.delete),
+                                      icon: const Icon(Icons.delete),
                                       onPressed: () {
                                         if (ref
-                                                .watch(scrambleListProvider)
-                                                .length !=
-                                            0) {
+                                            .watch(scrambleListProvider)
+                                            .isNotEmpty) {
                                           ref
                                               .watch(
                                                   scrambleListProvider.notifier)
@@ -61,11 +57,10 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                                       },
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.edit),
+                                      icon: const Icon(Icons.edit),
                                       onPressed: () => ref
-                                                  .watch(scrambleListProvider)
-                                                  .length !=
-                                              0
+                                              .watch(scrambleListProvider)
+                                              .isNotEmpty
                                           ? showDialog(
                                               context: context,
                                               // TODO: Set up so that it uses most recent scramble
@@ -78,7 +73,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
                                           : null,
                                     ), // TODO: Add popup
                                     IconButton(
-                                      icon: Icon(Icons.redo),
+                                      icon: const Icon(Icons.redo),
                                       onPressed: () => ref
                                               .read(currentScrambleProvider
                                                   .notifier)
