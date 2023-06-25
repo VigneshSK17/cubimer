@@ -5,9 +5,7 @@ import 'package:cubimer/widgets/scrambles_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-// TODO: Put scrambles in localstate
 final scrambleListProvider =
     StateNotifierProvider<ScrambleList, List<Scramble>>((ref) {
   return ScrambleList([]);
@@ -16,10 +14,10 @@ final scrambleListProvider =
 final currentScrambleProvider =
     StateNotifierProvider<CurrentScramble, String>((ref) => CurrentScramble());
 
-final storage = new LocalStorage('cubimer');
+final storage = LocalStorage('cubimer');
 
 void main() {
-  runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
@@ -49,7 +47,7 @@ class MyApp extends ConsumerWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Cubimer'), // TODO: Make cooler
+      home: const MyHomePage(title: 'Cubimer'),
     );
   }
 }
@@ -93,10 +91,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                 // Here we take the value from the MyHomePage object that was created by
                 // the App.build method, and use it to set our appbar title.
                 title: Text(widget.title,
-                    style: TextStyle(fontFamily: "PressStart2P")),
+                    style: const TextStyle(fontFamily: "PressStart2P")),
                 // leading: const Icon(Icons.list),
               ),
-              drawer: ScramblesDrawer(),
+              drawer: const ScramblesDrawer(),
               body: const Center(
                 // Center is a layout widget. It takes a single child and positions it
                 // in the middle of the parent.

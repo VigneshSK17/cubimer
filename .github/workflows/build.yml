@@ -1,0 +1,63 @@
+name: Deploy
+on: [push]
+
+jobs:
+    macos:
+        runs-on: macos-latest
+        steps:
+        - uses: actions/checkout@v3
+        - uses: subosito/flutter-action@v2
+          with:
+            channel: 'stable'
+        - name: Get dependencies
+          run: flutter pub get
+        - name: Build
+          run: flutter build macos --release
+    windows:
+        runs-on: windows-latest
+        steps:
+        - uses: actions/checkout@v3
+        - uses: subosito/flutter-action@v2
+          with:
+            channel: 'stable'
+        - name: Get dependencies
+          run: flutter pub get
+        - name: Build
+          run: flutter build windows --release
+    linux:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - uses: subosito/flutter-action@v2
+          with:
+            channel: 'stable'
+        - name: Get dependencies
+          run: flutter pub get
+        - name: Build
+          run: flutter build linux --release
+    android:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - uses: actions/setup-java@v3
+          with:
+            distribution: 'zulu'
+            java-version: '17'
+        - uses: subosito/flutter-action@v2
+          with:
+            channel: 'stable'
+        - name: Get dependencies
+          run: flutter pub get
+        - name: Start release build
+          run: flutter build appbundle --release
+    web:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - uses: subosito/flutter-action@v2
+          with:
+            channel: 'stable'
+        - name: Get dependencies
+          run: flutter pub get
+        - name: Start release build
+          run: flutter build web --release
