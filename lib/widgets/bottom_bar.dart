@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cubimer/data/scramble.dart';
 import 'package:cubimer/main.dart';
 import 'package:cubimer/widgets/edit_dialog.dart';
@@ -19,13 +20,30 @@ class _BottomBarState extends ConsumerState<BottomBar> {
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // Expanded(
+                    // child: Align(
+                    // fit: BoxFit.contain,
+                    // alignment: Alignment.centerLeft,
+                    // child: FittedBox(
+                    // FittedBox(
+                    //     fit: BoxFit.fitWidth,
+                    //     child: Text(ref.watch(currentScrambleProvider))),
+                    // )),
+
+                    // fit: BoxFit.fitWidth,
                     Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Text(ref.watch(currentScrambleProvider)),
-                      ),
-                    ),
+                        child: AutoSizeText(
+                      ref.watch(currentScrambleProvider),
+                      style: TextStyle(fontSize: 50),
+                      minFontSize: 16,
+                    )),
+                    // ),
+                    // const Spacer(),
+                    // ConstrainedBox(
+                    //     constraints: BoxConstraints(maxWidth: 100),
+                    //     child: SizedBox()),
                     const Spacer(),
                     SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
